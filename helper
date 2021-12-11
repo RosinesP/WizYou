@@ -1,8 +1,8 @@
 
 msg = "Bones,WizYu està encantat d'acompanyar-te!\n"
-msg += "WitzYu és un sistema que t'ajuda a conèixer les teves emocions, animar-se i estimar-se.\n"
-msg +="Si vols conèixer les teves emocions, envia'm un àudio, un text o un foto teu d'ara\n"
-msg += "Si vols escoltar una cançó segons el gènere, com per exemple: rock, pop, metal, jazz, reggaeton, techno, k-pop, rap, instrumental, etc. o segons el teu estat d'ànim, com per exemple: Feliç, trist, neutral, enfadat, afligit, desanimat, optimista, etc. Envia un missatge de: '\genere [tipo de gènere/estat emocional]', com per exemple: '\genere jazz'.\n
-msg += "Si no tens cap preferència de música en aquests moments, t'escullo, només has d'enviar un missatge dient: '\musica'\n"
-msg += "Si vols motivar-te un mica, envia un missatge dient: '\motivacio'"
-msg += "Si vols alguna idea sobre que podries fer, envia un missatge dient: 'activitats'"
+msg += "WitzYu és un sistema que t'ajuda a conèixer les teves emocions, animar-se i estimar-se.\n\n"
+msg +="1. Si vols conèixer les teves emocions, envia'm un àudio, un text o un foto teu d'ara.\n\n"
+msg += "2. Si vols escoltar una cançó segons el gènere o segons el teu estat d'ànim, envia un missatge de: '\genere tipo de gènere/estat emocional', com per exemple: '\genere jazz'.\n\n"
+msg += "3. Si no tens cap preferència de música en aquests moments, t'escullo, només has d'enviar un missatge dient: '\musica'.\n\n"
+msg += "4. Si vols motivar-te un mica, envia un missatge dient: '\motivacio'.\n\n"
+msg += "5. Si vols alguna idea sobre que podries fer, envia un missatge dient: 'activitats'.\n\n"
