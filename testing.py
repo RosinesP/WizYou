@@ -1,11 +1,22 @@
 from telegram.ext import Updater, CommandHandler, InlineQueryHandler, MessageHandler, Filters
 from telegram import ParseMode
 import os, random
+import emotionDetection as ED
+
+
+def prediction_to_categories(pred):
+    if pred <= 1.0:
+        return "0-1"
+    elif pred >= 3:
+        return "3-4"
+    return "1-3"
 
 
 def send_audio(update, context):
     # Fer-ho segons rang de puntuacions
-    # state = #states_list[0]
+    pred = random.uniform(0.0, 4.0)
+    print(pred)
+    state = prediction_to_categories(pred)
     song = random.choice(os.listdir("Songs/" + state + "/"))
     context.bot.send_audio(chat_id=update.effective_chat.id, audio=open("Songs/" + state + "/" + song, 'rb'), )
 
@@ -22,7 +33,9 @@ def choose_music(update, context):
 def send_text(update, context):
     # Enviar una frase de manera aleatòria d'entre les que hi ha en un document
     # Fer-ho segons rang de puntuacions
-    # state = #states_list[0]
+    pred = random.uniform(0.0, 4.0)
+    print(pred)
+    state = prediction_to_categories(pred)
     with open("Text/" + state) as file:
         sentences = [line.rstrip() for line in file]
 
@@ -56,8 +69,14 @@ def manage_audio(update, context):
 def manage_photo(update, context):
     file_id = update.message.photo[-1].file_id
     newFile = context.bot.getFile(file_id)
-    newFile.download('Photos/' + str(update.effective_chat.id) + '.jpg')
+    path = 'Photos/' + str(update.effective_chat.id) + '.jpg'
+    newFile.download(path)
     context.bot.sendMessage(chat_id=update.message.chat_id, text="download succesfull")
+    label, probs = ED.get_emotion(path)
+    msg_1 = "" + label
+    msg_2 = "" + str(probs)
+    context.bot.sendMessage(chat_id=update.message.chat_id, text=msg_1+msg_2)
+
 
 
 def help(update, context):
