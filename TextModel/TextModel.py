@@ -1,5 +1,5 @@
 
-from aux import preprocess
+from TextFunction import preprocess
 
 
 from tensorflow.keras.preprocessing.sequence import pad_sequences
