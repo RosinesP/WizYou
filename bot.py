@@ -74,6 +74,7 @@ def send_text(update, context):
             msg = ""
             for tmp in msgs:
                 msg += tmp+"\n"
+            context.bot.send_message(chat_id=update.effective_chat.id, text="Saps aquest acudit?")
             context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
 
     else:
