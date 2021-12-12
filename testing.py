@@ -160,9 +160,16 @@ def day(update, context):
         txt = ' '.join(context.args)
         p = predict_text_sentiment(txt)
         print(p)
-        label = prediction_to_categories(p)
+        label = prediction_to_categories(p[0])
         print(label)
         context.user_data['major_emotion'] = label
+        context.user_data['state'] = True
+        if label == "positivitat":
+            context.user_data['emotion_probs'] = [0.02, 0.02, 0.02, 0.76, 0.08, 0.02, 0.08]
+        elif label == "negativitat":
+            context.user_data['emotion_probs'] = [0.25, 0.15, 0.19, 0.02, 0.08, 0.25, 0.08]
+        else:
+            context.user_data['emotion_probs'] = [1/7, 1/7, 1/7, 1/7, 1/7, 1/7, 1/7]
 
         msg = "Detecto una certa " + str(label) + "." + "\n"
         context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
