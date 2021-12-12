@@ -26,11 +26,11 @@ def choose_state(major_emotion, emotion_probs):
 
 
 def prediction_to_categories(pred):
-    if pred < 0.45:
-        return "negative"
-    elif pred > 0.55:
-        return "positive"
-    return "neutral"
+    if pred < 0.5:
+        return "negativitat"
+    elif pred > 0.6:
+        return "positivitat"
+    return "neutralitat"
 
 
 def send_music(update, context):
@@ -38,8 +38,8 @@ def send_music(update, context):
         context.user_data['state'] = False
     
     if context.user_data['state'] is False:
-        song = random.choice(os.listdir("Songs/neutral/"))
-        context.bot.send_audio(chat_id=update.effective_chat.id, audio=open("Songs/neutral/" + song, 'rb'), )
+        song = random.choice(os.listdir("Songs/neutralitat/"))
+        context.bot.send_audio(chat_id=update.effective_chat.id, audio=open("Songs/neutralitat/" + song, 'rb'), )
 
     else:
         state = choose_state(context.user_data['major_emotion'], context.user_data['emotion_probs'])
@@ -105,9 +105,8 @@ def start(update, context):
 
 
 def manage_text(update, context):
-    msg = "Prova a usar la comanda '/help' per a veure la diferents funcionalitats del bot"
+    msg = "Prova a usar la comanda '/ajuda' per a veure la diferents funcionalitats del bot"
     context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
-
 
 
 def manage_photo(update, context):
@@ -142,8 +141,8 @@ def help(update, context):
     else:
         if context.args[0] == 'musica':
             msg = "Els diferents gèneres o estats d'ànims disponibles són:\n"
-            msg += "techno, rock, rap, pop, metal, enfadat, disgust, por, alegria, negativitat, neutral, positivitat, tristesa i sorpresa."
-            context.bot.send_message(chat_id=update.effective_chat.id, text=msg)  
+            msg += "techno, rock, rap, pop, metal, enfadat, disgust, por, alegria, negativitat, neutralitat, positivitat, tristesa i sorpresa."
+            context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
 
 
 def choose_activity(update, context):
@@ -160,8 +159,12 @@ def day(update, context):
     else:
         txt = ' '.join(context.args)
         p = predict_text_sentiment(txt)
+        print(p)
         label = prediction_to_categories(p)
-        msg = str(label)+"\n"
+        print(label)
+        context.user_data['major_emotion'] = label
+
+        msg = "Detecto una certa " + str(label) + "." + "\n"
         context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
 
 
