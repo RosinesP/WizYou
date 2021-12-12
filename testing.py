@@ -4,12 +4,12 @@ import os, random
 import emotionDetection as ED
 from TextModel import predict_text_sentiment
 
-weights = [-0.4, -0.4, -0.4, 0.5, 0.3, -0.4, 0.4]
+weights = [-0.5, -0.4, -0.4, 0.5, 0.3, -0.5, 0.4]
 
 
 def choose_state(major_emotion, emotion_probs):
 
-    if max(emotion_probs) > 0.5:
+    if max(emotion_probs) > 0.7:
         print(major_emotion)
         return major_emotion
     else:
@@ -26,9 +26,9 @@ def choose_state(major_emotion, emotion_probs):
 
 
 def prediction_to_categories(pred):
-    if pred < 0.35:
+    if pred < 0.45:
         return "negative"
-    elif pred > 0.65:
+    elif pred > 0.55:
         return "positive"
     return "neutral"
 
@@ -38,12 +38,10 @@ def send_music(update, context):
         context.user_data['state'] = False
     
     if context.user_data['state'] is False:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="NO STATE -> NEUTRAL SONG")
         song = random.choice(os.listdir("Songs/neutral/"))
         context.bot.send_audio(chat_id=update.effective_chat.id, audio=open("Songs/neutral/" + song, 'rb'), )
 
     else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="STATE")
         state = choose_state(context.user_data['major_emotion'], context.user_data['emotion_probs'])
         if isinstance(state, str):
             song = random.choice(os.listdir("Songs/" + state + "/"))
@@ -57,7 +55,7 @@ def send_music(update, context):
 
 def choose_music(update, context):
     entry = ' '.join(context.args)
-    states_list = ["positive", "negative", "rock", "pop", "metal", "jazz", "reggaeton", "techno", "k-pop", "rap", "instrumental", "happy", "sad", "neutral", "angry", "disgust", "surprise", "fear"]
+    states_list = ["positivitat", "negativitat", "rock", "pop", "metal", "jazz", "reggaeton", "techno", "k-pop", "rap", "instrumental", "alegria", "tristesa", "neutral", "enfadat", "disgust", "sorpresa", "por"]
     
     if entry in states_list:
         song = random.choice(os.listdir("Songs/" + entry + "/"))
@@ -140,24 +138,26 @@ def help(update, context):
         msg =  "Bones \U0001F60A, WizYu està encantat d'acompanyar-te!\n"
         msg += "WitzYu és un sistema que t'ajuda a conèixer les teves emocions, a animar-te i estimar-te.\n\n"
         msg += "1. Si vols conèixer les teves emocions, envia'm un àudio \U0001F399, un text \U0001F4DD o un foto teu d'ara\U0001F933.\n\n"
-        msg += "2. Si vols escoltar una cançó segons el gènere o segons el teu estat d'ànim, envia un missatge de: '/genere tipo de gènere/estat emocional', com per exemple: '/genere metal'🎸"
-        msg += "o bé '/genere sad' 😕 \n"
-        msg += "Pots descobrir totes les opcions amb la comanda /ajuda genere.\n\n"
+        msg += "2. Si vols escoltar una cançó segons el gènere o segons el teu estat d'ànim, envia un missatge de: '/genere tipus de gènere/estat emocional', com per exemple: '/genere metal'🎸"
+        msg += "o bé '/genere tristesa' 😕 \n"
+        msg += "Pots descobrir totes les opcions amb la comanda /ajuda musica.\n\n"
         msg += "3. Si no tens cap preferència musical en aquests moments, puc triar-te'n una, només has d'enviar un missatge dient: '/musica'.\U0001F3BC \U0001F3B5 \U0001F3B6\n\n"
         msg += "4. Si vols motivar-te un mica, envia un missatge dient: '/motivacio'.\U00002728 \n\n"
         msg += "5. Si vols alguna idea sobre que podries fer, envia un missatge dient: '/activitats'.\U0001F938 \n\n"
         context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
     else:
         if context.args[0] == 'musica':
-            msg = "Els diferents gèneres o estats d'ànims disponibles son:\n"
-            msg += "techno, rock, rap, pop, metal, angry, disgust, fear, happy, negative, neutral, positive, sad i surprise"
+            msg = "Els diferents gèneres o estats d'ànims disponibles són:\n"
+            msg += "techno, rock, rap, pop, metal, enfadat, disgust, por, alegria, negativitat, neutral, positivitat, tristesa i sorpresa."
             context.bot.send_message(chat_id=update.effective_chat.id, text=msg)  
+
 
 def choose_activity(update, context):
     with open("activitats") as file:
         sentences = [line.rstrip() for line in file]
         msg = random.choice(sentences)
         context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
+
 
 def day(update, context):
     if len(context.args) == 0:
@@ -169,6 +169,8 @@ def day(update, context):
         label = prediction_to_categories(p)
         msg = str(label)+"\n"
         context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
+
+
 def main():
     TOKEN = open('token.txt').read().strip()
     updater = Updater(token=TOKEN, use_context=True)
