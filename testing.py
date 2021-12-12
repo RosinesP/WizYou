@@ -105,15 +105,9 @@ def start(update, context):
 
 
 def manage_text(update, context):
-    msg = "Te leo"
+    msg = "Prova a usar la comanda '/help' per a veure la diferents funcionalitats del bot"
     context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
 
-
-def manage_audio(update, context):
-    file_id = update.message.voice.file_id
-    newFile = context.bot.get_file(file_id)
-    newFile.download('Audios/' + str(update.effective_chat.id) + '.ogg')
-    context.bot.sendMessage(chat_id=update.message.chat_id, text="download succesfull")
 
 
 def manage_photo(update, context):
@@ -137,7 +131,7 @@ def help(update, context):
     if len(context.args) == 0:
         msg =  "Bones \U0001F60A, WizYu està encantat d'acompanyar-te!\n"
         msg += "WitzYu és un sistema que t'ajuda a conèixer les teves emocions, a animar-te i estimar-te.\n\n"
-        msg += "1. Si vols conèixer les teves emocions, envia'm un àudio \U0001F399, un text \U0001F4DD o un foto teu d'ara\U0001F933.\n\n"
+        msg += "1. Si vols conèixer les teves emocions envia'm un text \U0001F4DD amb la comanda '/dia' o un foto teu d'ara\U0001F933.\n\n"
         msg += "2. Si vols escoltar una cançó segons el gènere o segons el teu estat d'ànim, envia un missatge de: '/genere tipus de gènere/estat emocional', com per exemple: '/genere metal'🎸"
         msg += "o bé '/genere tristesa' 😕 \n"
         msg += "Pots descobrir totes les opcions amb la comanda /ajuda musica.\n\n"
@@ -184,7 +178,6 @@ def main():
     dispatcher.add_handler(CommandHandler('activitats', choose_activity))
     dispatcher.add_handler(CommandHandler('dia', day))
     dispatcher.add_handler(MessageHandler(Filters.text, manage_text))
-    dispatcher.add_handler(MessageHandler(Filters.voice, manage_audio))
     dispatcher.add_handler(MessageHandler(Filters.photo, manage_photo))
 
     updater.start_polling()
