@@ -1,8 +1,0 @@
-
-msg = "Bones \U0001F60A, WizYu està encantat d'acompanyar-te!\n"
-msg += "WitzYu és un sistema que t'ajuda a conèixer les teves emocions, animar-se i estimar-se.\n\n"
-msg +="1. Si vols conèixer les teves emocions, envia'm un àudio \U0001F39A, un text \U0001F4DD o un foto teu d'ara\U0001F933.\n\n"
-msg += "2. Si vols escoltar una cançó segons el gènere o segons el teu estat d'ànim, envia un missatge de:\n'\genere tipo de gènere/estat emocional'\n com per exemple: '\genere jazz'.\U0001F3B7\n\n"
-msg += "3. Si no tens cap preferència de música en aquests moments, t'escullo, només has d'enviar un missatge dient: '\musica'.\U0001F3BC \U0001F3B5 \U0001F3B6\n\n"
-msg += "4. Si vols motivar-te un mica, envia un missatge dient: '\motivacio'.\U0002728\n\n"
-msg += "5. Si vols alguna idea sobre que podries fer, envia un missatge dient: '\activitats'.\U0001F938\n\n"
