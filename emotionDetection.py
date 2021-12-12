@@ -8,14 +8,13 @@ import numpy as np
 
 face_classifier = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 classifier = load_model('model.h5')
-emotion_labels = ['Angry','Disgust','Fear','Happy','Neutral', 'Sad', 'Surprise']
+emotion_labels = ['enfadat', 'disgust', 'por', 'alegria', 'neutralitat', 'tristesa', 'sorpresa']
 
 
 def get_emotion(path):
     """Donat un string on contingui el path d'una imatge (he provat amb format jpg) retorna un string;
     una label d'entre les emotion_labels."""
     frame = cv2.imread(path, 0)
-    print(frame)
     faces = face_classifier.detectMultiScale(frame)
     
     (x,y,w,h) = faces[0]
