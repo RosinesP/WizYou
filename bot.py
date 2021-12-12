@@ -106,7 +106,7 @@ def start(update, context):
 
 
 def manage_text(update, context):
-    msg = "Prova a usar la comanda '/ajuda' per a veure la diferents funcionalitats del bot"
+    msg = "Prova a usar la comanda '/ajuda' per a veure la diferents funcionalitats del bot."
     context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
 
 
@@ -115,13 +115,14 @@ def manage_photo(update, context):
     newFile = context.bot.getFile(file_id)
     path = 'Photos/' + str(update.effective_chat.id) + '.jpg'
     newFile.download(path)
-    context.bot.sendMessage(chat_id=update.message.chat_id, text="download succesfull")
+    context.bot.sendMessage(chat_id=update.message.chat_id, text="Ja veig com et sents!")
     label, probs = ED.get_emotion(path)
     context.user_data['major_emotion'] = label
     context.user_data['emotion_probs'] = probs
     context.user_data['state'] = True
     print(probs)
     print(label)
+    context.bot.sendMessage(chat_id=update.message.chat_id, text="Detecto una certa " + label + ".")
 
 
 def help(update, context):
