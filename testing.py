@@ -2,7 +2,7 @@ from telegram.ext import Updater, CommandHandler, InlineQueryHandler, MessageHan
 from telegram import ParseMode
 import os, random
 import emotionDetection as ED
-
+from TextModel import predict_text_sentiment
 
 weights = [-0.4, -0.4, -0.4, 0.5, 0.3, -0.4, 0.4]
 
@@ -99,9 +99,9 @@ def start(update, context):
 
     botname = context.bot.first_name
     name = update.effective_chat.first_name
-    message_1 = "Hey %s. Welcome to %s. \n" % (name, botname)
-    message_2 = " How are you doing today?"
-    message_3 = " Please type '/help' to see everything I can do!"
+    message_1 = "Hey %s!! %s et saluda!! \n" % (name, botname)
+    message_2 = "Com t'està anant el dia?\n"
+    message_3 = "Pots escriure '/ajuda' per descobrir el que puc fer per tu.\U0001F917 \n"
     context.user_data['state'] = False
     context.bot.send_message(chat_id=update.effective_chat.id,text=message_1 + message_2 + message_3)
 
@@ -136,15 +136,22 @@ def help(update, context):
     """Action that provides the telegram users with useful and basic information
     about the commands that they can use. """
 
-    msg = "Bones, WizYu està encantat d'acompanyar-te!\n"
-    msg += "WitzYu és un sistema que t'ajuda a conèixer les teves emocions, animar-se i estimar-se.\n"
-    msg +="Si vols conèixer les teves emocions, envia'm un àudio, un text o un foto teu d'ara\n"
-    msg += "Si vols escoltar una cançó segons el gènere, com per exemple: rock, pop, metal, jazz, reggaeton, techno, k-pop, rap, instrumental, etc. o segons el teu estat d'ànim, com per exemple: Feliç, trist, neutral, enfadat, afligit, desanimat, optimista, etc. Envia un missatge de: '\'/genere\' [tipo de gènere/estat emocional]', com per exemple: '\genere jazz'.\n"
-    msg += "Si no tens cap preferència de música en aquests moments, t'escullo, només has d'enviar un missatge dient: \'/musica\'\n"
-    msg += "Si vols motivar-te un mica, envia un missatge dient: \'/motivation\'"
-    msg += "Si vols alguna idea sobre que podries fer, envia un missatge dient: \'/activitats\'\n"
-    context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
-
+    if len(context.args) == 0:
+        msg =  "Bones \U0001F60A, WizYu està encantat d'acompanyar-te!\n"
+        msg += "WitzYu és un sistema que t'ajuda a conèixer les teves emocions, a animar-te i estimar-te.\n\n"
+        msg += "1. Si vols conèixer les teves emocions, envia'm un àudio \U0001F399, un text \U0001F4DD o un foto teu d'ara\U0001F933.\n\n"
+        msg += "2. Si vols escoltar una cançó segons el gènere o segons el teu estat d'ànim, envia un missatge de: '/genere tipo de gènere/estat emocional', com per exemple: '/genere metal'🎸"
+        msg += "o bé '/genere sad' 😕 \n"
+        msg += "Pots descobrir totes les opcions amb la comanda /ajuda genere.\n\n"
+        msg += "3. Si no tens cap preferència musical en aquests moments, puc triar-te'n una, només has d'enviar un missatge dient: '/musica'.\U0001F3BC \U0001F3B5 \U0001F3B6\n\n"
+        msg += "4. Si vols motivar-te un mica, envia un missatge dient: '/motivacio'.\U00002728 \n\n"
+        msg += "5. Si vols alguna idea sobre que podries fer, envia un missatge dient: '/activitats'.\U0001F938 \n\n"
+        context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
+    else:
+        if context.args[0] == 'musica':
+            msg = "Els diferents gèneres o estats d'ànims disponibles son:\n"
+            msg += "techno, rock, rap, pop, metal, angry, disgust, fear, happy, negative, neutral, positive, sad i surprise"
+            context.bot.send_message(chat_id=update.effective_chat.id, text=msg)  
 
 def choose_activity(update, context):
     with open("activitats") as file:
@@ -152,7 +159,16 @@ def choose_activity(update, context):
         msg = random.choice(sentences)
         context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
 
-
+def day(update, context):
+    if len(context.args) == 0:
+        msg = "Epss compte! Després de '/dia' cal que m'expliquis el teu dia! Vull saber com et sents.\n"
+        context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
+    else:
+        txt = ' '.join(context.args)
+        p = predict_text_sentiment(txt)
+        label = prediction_to_categories(p)
+        msg = str(label)+"\n"
+        context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
 def main():
     TOKEN = open('token.txt').read().strip()
     updater = Updater(token=TOKEN, use_context=True)
@@ -164,6 +180,7 @@ def main():
     dispatcher.add_handler(CommandHandler('motivacio', send_text))
     dispatcher.add_handler(CommandHandler('genere', choose_music))
     dispatcher.add_handler(CommandHandler('activitats', choose_activity))
+    dispatcher.add_handler(CommandHandler('dia', day))
     dispatcher.add_handler(MessageHandler(Filters.text, manage_text))
     dispatcher.add_handler(MessageHandler(Filters.voice, manage_audio))
     dispatcher.add_handler(MessageHandler(Filters.photo, manage_photo))
