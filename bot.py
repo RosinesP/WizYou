@@ -146,7 +146,7 @@ def help(update, context):
 
 
 def choose_activity(update, context):
-    with open("activitats") as file:
+    with open("Text/activitats") as file:
         sentences = [line.rstrip() for line in file]
         msg = random.choice(sentences)
         context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
